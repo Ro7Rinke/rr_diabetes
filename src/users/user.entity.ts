@@ -12,12 +12,6 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ nullable: true })
-  resetPasswordToken?: string;
-
-  @Column({ nullable: true, type: 'timestamp' })
-  resetPasswordExpires?: Date;
-
   @OneToMany(() => GlucoseRecord, (record) => record.user)
   glucoseRecords: GlucoseRecord[];
 }

@@ -4,12 +4,16 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './user.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { JwtService } from '@nestjs/jwt';
+import { MailerService } from 'src/mailer/mailer.service';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User)
         private usersRepo: Repository<User>,
+        private jwtService: JwtService,
+        private mailerService: MailerService,
     ) { }
 
     async create(email: string, password: string): Promise<User> {
@@ -26,29 +30,33 @@ export class UsersService {
         const user = await this.usersRepo.findOne({ where: { email } });
         if (!user) throw new Error('User not found');
 
-        const token = uuidv4();
-        user.resetPasswordToken = token;
-        user.resetPasswordExpires = new Date(Date.now() + 3600 * 1000);
+        const payload = { sub: user.id, email: user.email };
+        const token = this.jwtService.sign(payload, { expiresIn: '1h' });
 
-        await this.usersRepo.save(user);
+        const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
 
-        // Send Mail Here
-        // Ex: `${FRONTEND_URL}/reset-password?token=${token}`
+        await this.mailerService.sendMail(
+            user.email,
+            'Reset your password',
+            `<p>Click <a href="${resetLink}">here</a> to reset your password</p>`
+        );
+
         return token;
     }
 
     async resetPassword(token: string, newPassword: string) {
-        const user = await this.usersRepo.findOne({ where: { resetPasswordToken: token } });
+        try {
+            const payload = this.jwtService.verify(token);
 
-        if (!user || (user.resetPasswordExpires && user.resetPasswordExpires < new Date())) {
-            throw new Error('Token invalid or expired');
+            const user = await this.usersRepo.findOne({ where: { id: payload.sub } });
+            if (!user) throw new Error('User not found');
+
+            user.password = await bcrypt.hash(newPassword, 10);
+            await this.usersRepo.save(user);
+
+            return { message: 'Password reset successfully' };
+        } catch (err) {
+            throw new Error('Invalid or expired token');
         }
-
-        user.password = await bcrypt.hash(newPassword, 10);
-        user.resetPasswordToken = undefined;
-        user.resetPasswordExpires = undefined;
-
-        await this.usersRepo.save(user);
-        return { message: 'Password reset successfully' };
     }
 }

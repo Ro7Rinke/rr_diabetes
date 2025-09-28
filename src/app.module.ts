@@ -4,13 +4,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { GlucoseModule } from './glucose/glucose.module';
+import { MailerService } from './mailer/mailer.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
        imports: [ConfigModule],
-       inject: [ConfigModule],
+       inject: [ConfigService],
        useFactory: (config: ConfigService) => ({
         type: 'postgres',
         host: config.get<string>('DB_HOST'),
@@ -26,5 +27,6 @@ import { GlucoseModule } from './glucose/glucose.module';
     AuthModule,
     GlucoseModule,
   ],
+  providers: [MailerService],
 })
 export class AppModule {}
