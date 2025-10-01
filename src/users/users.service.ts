@@ -6,6 +6,7 @@ import { User } from './user.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
 import { MailerService } from 'src/mailer/mailer.service';
+import { CreateUserDto } from './dto/create-user-dto';
 
 @Injectable()
 export class UsersService {
@@ -16,9 +17,12 @@ export class UsersService {
         private mailerService: MailerService,
     ) { }
 
-    async create(email: string, password: string): Promise<User> {
-        const hash = await bcrypt.hash(password, 10);
-        const user = this.usersRepo.create({ email, password: hash });
+    async create(dto: CreateUserDto) {
+        const hashedPassword = await bcrypt.hash(dto.password, 10); // saltRounds = 10
+        const user = this.usersRepo.create({
+            ...dto,
+            password: hashedPassword,
+        });
         return this.usersRepo.save(user);
     }
 
