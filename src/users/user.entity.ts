@@ -1,5 +1,6 @@
 import { GlucoseRecord } from 'src/glucose/glucose-record.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Target } from 'src/targets/target.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne } from 'typeorm';
 
 @Entity('users')
 export class User {
@@ -26,4 +27,7 @@ export class User {
 
   @OneToMany(() => GlucoseRecord, (record) => record.user)
   glucoseRecords: GlucoseRecord[];
+
+  @OneToOne(() => Target, (target) => target.user, { cascade: true })
+  target: Target
 }

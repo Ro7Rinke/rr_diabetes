@@ -13,7 +13,7 @@ export class GlucoseRecord {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('int')
+  @Column('decimal')
   value: number; // valor da glicemia em mg/dL
 
   @Column({ type: 'timestamptz' })

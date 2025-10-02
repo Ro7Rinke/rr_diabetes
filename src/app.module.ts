@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { GlucoseModule } from './glucose/glucose.module';
 import { MailerService } from './mailer/mailer.service';
+import { TargetsModule } from './targets/targets.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MailerService } from './mailer/mailer.service';
     UsersModule,
     AuthModule,
     GlucoseModule,
+    TargetsModule,
   ],
   providers: [MailerService],
 })

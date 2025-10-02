@@ -7,6 +7,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
 import { MailerService } from 'src/mailer/mailer.service';
 import { CreateUserDto } from './dto/create-user-dto';
+import { Target } from 'src/targets/target.entity';
+import { ResponseUserDto } from './dto/response-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -18,12 +20,17 @@ export class UsersService {
     ) { }
 
     async create(dto: CreateUserDto) {
-        const hashedPassword = await bcrypt.hash(dto.password, 10); // saltRounds = 10
+        const hashedPassword = await bcrypt.hash(dto.password, 10);
         const user = this.usersRepo.create({
             ...dto,
             password: hashedPassword,
+            target: new Target()
         });
         return this.usersRepo.save(user);
+    }
+
+    async findById(id: string) {
+        return this.usersRepo.findOne({ where: { id } });
     }
 
     async findByEmail(email: string): Promise<User | null> {
@@ -62,5 +69,16 @@ export class UsersService {
         } catch (err) {
             throw new Error('Invalid or expired token');
         }
+    }
+
+    toSafeUser(user: User){
+        return new ResponseUserDto({
+              id: user.id,
+              role: user.role,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              phone: user.phone,
+            });
     }
 }

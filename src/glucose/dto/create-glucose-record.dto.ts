@@ -1,8 +1,8 @@
-import { IsInt, IsNotEmpty, IsOptional, IsEnum, IsDateString } from 'class-validator';
+import { IsOptional, IsEnum, IsDateString, IsDecimal } from 'class-validator';
 import { RecordContext } from '../glucose-record.entity';
 
 export class CreateGlucoseRecordDto {
-  @IsInt()
+  @IsDecimal()
   value: number;
 
   @IsDateString()
