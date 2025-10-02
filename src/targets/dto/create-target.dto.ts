@@ -1,10 +1,10 @@
-import { IsInt, IsDecimal } from 'class-validator';
+import { IsInt, IsNumber } from 'class-validator';
 
 export class CreateTargetDto {
-  @IsDecimal()
+  @IsNumber({}, { message: 'Value must be a number' })
   value: number;
 
-  @IsDecimal()
+  @IsNumber({}, { message: 'Tolerance must be a number' })
   tolerance: number;
 
   @IsInt()

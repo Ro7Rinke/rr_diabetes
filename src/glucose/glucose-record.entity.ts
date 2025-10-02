@@ -14,7 +14,7 @@ export class GlucoseRecord {
   id: string;
 
   @Column('decimal')
-  value: number; // valor da glicemia em mg/dL
+  value: number;
 
   @Column({ type: 'timestamptz' })
   measuredAt: Date;

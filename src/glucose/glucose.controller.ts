@@ -8,7 +8,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class GlucoseController {
   constructor(private glucoseService: GlucoseService) {}
 
-  @Post()
+  @Post('record')
   async create(@Body() dto: CreateGlucoseRecordDto, @Request() req) {
     return this.glucoseService.create(req.user, dto);
   }
