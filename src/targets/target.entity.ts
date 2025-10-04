@@ -6,10 +6,22 @@ export class Target {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column('decimal', { default: 100 })
+    @Column('decimal', {
+        default: 100, 
+        transformer: {
+            to: (value: number) => value,
+            from: (value: string) => parseFloat(value),
+        }
+    })
     value: number
 
-    @Column('decimal', { default: 10 })
+    @Column('decimal', {
+        default: 10,
+        transformer: {
+            to: (value: number) => value,
+            from: (value: string) => parseFloat(value),
+        }
+    })
     tolerance: number;
 
     @Column('int', { default: 7 })

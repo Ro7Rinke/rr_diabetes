@@ -13,7 +13,7 @@ export class GlucoseController {
     return this.glucoseService.create(req.user, dto);
   }
 
-  @Get()
+  @Get('record')
   async getAll(@Request() req) {
     return this.glucoseService.findAllByUser(req.user.id);
   }
