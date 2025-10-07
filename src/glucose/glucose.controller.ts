@@ -17,4 +17,9 @@ export class GlucoseController {
   async getAll(@Request() req) {
     return this.glucoseService.findAllByUser(req.user.id);
   }
+
+  @Get('average')
+  async getAverage(@Request() req) {
+    return this.glucoseService.getAverageForUser(req.user)
+  }
 }
