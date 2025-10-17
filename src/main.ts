@@ -12,7 +12,7 @@ async function bootstrap() {
   }));
 
   app.enableCors({
-    origin: ['http://localhost:7002', 'http://127.0.0.1:7002', 'http://192.168.3.77:7002', 'https://ro7rinke.com.br'],
+    origin: ['http://localhost:7002', 'http://127.0.0.1:7002', 'http://192.168.3.77:7002', 'https://ro7rinke.com.br', 'https://diabetes.ro7rinke.com.br'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
