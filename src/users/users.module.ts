@@ -11,7 +11,7 @@ import { MailerService } from '../mailer/mailer.service';
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'default_secret',
       signOptions: { 
-        expiresIn: String(process.env.JWT_EXPIRES_IN || '1h')
+        expiresIn: '1h'
       },
     }),
   ],
